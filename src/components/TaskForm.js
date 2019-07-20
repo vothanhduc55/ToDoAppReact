@@ -9,6 +9,18 @@ class TaskForm extends Component {
       status: false
     };
   }
+  // componentWillMount() {
+  //   if (this.props) {
+  //     this.setState([
+  //       {
+  //         id: this.props.task.id,
+  //         name: this.props.task.name,
+  //         status: this.props.task.status
+  //       }
+  //     ]);
+  //   }
+  //   console.log(this.state);
+  // }
 
   onChange = event => {
     var target = event.target;

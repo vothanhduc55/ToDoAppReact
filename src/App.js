@@ -33,7 +33,8 @@ class App extends Component {
     super(props);
     this.state = {
       tasks: [],
-      isDisplayForm: false
+      isDisplayForm: false,
+      taskEditing: ""
     };
   }
 
@@ -97,6 +98,12 @@ class App extends Component {
     });
   };
 
+  onShowForm = () => {
+    this.setState({
+      isDisplayForm: true
+    });
+  };
+
   onSubmit = data => {
     var taskfromSubmit = this.state.tasks;
     data.id = this.GenerateId();
@@ -105,6 +112,62 @@ class App extends Component {
       tasks: taskfromSubmit
     });
     localStorage.setItem("tasks", JSON.stringify(taskfromSubmit));
+  };
+
+  onUpdateStatus = id => {
+    var taskfromSubmit = this.state.tasks;
+    var index = this.findIndex(id);
+    // console.log(index);
+
+    if (index !== -1) {
+      taskfromSubmit[index].status = !taskfromSubmit[index].status;
+      this.setState([
+        {
+          tasks: taskfromSubmit
+        }
+      ]);
+      localStorage.setItem("tasks", JSON.stringify(taskfromSubmit));
+    }
+  };
+
+  onUpdate = id => {
+    var { tasks } = this.state;
+    var index = this.findIndex(id);
+    var taskEditing = tasks[index];
+    console.log(taskEditing);
+    this.setState([
+      {
+        taskEditing: taskEditing
+      }
+    ]);
+    console.log(this.state.taskEditing);
+  };
+
+  onDelete = id => {
+    var taskfromSubmit = this.state.tasks;
+    var index = this.findIndex(id);
+    // console.log(index);
+
+    if (index !== -1) {
+      taskfromSubmit.splice(index, 1);
+      this.setState([
+        {
+          tasks: taskfromSubmit
+        }
+      ]);
+      localStorage.setItem("tasks", JSON.stringify(taskfromSubmit));
+    }
+  };
+
+  findIndex = id => {
+    var taskfromSubmit = this.state.tasks;
+    var result = -1;
+    taskfromSubmit.forEach((task, index) => {
+      if (task.id === id) {
+        return (result = index);
+      }
+    });
+    return result;
   };
 
   render() {
@@ -150,7 +213,12 @@ class App extends Component {
             <Control />
             <div className="row mt-15">
               <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <TaskList tasks={tasks} />
+                <TaskList
+                  tasks={tasks}
+                  onUpdateStatus={this.onUpdateStatus}
+                  onDelete={this.onDelete}
+                  onUpdate={this.onUpdate}
+                />
               </div>
             </div>
           </div>
